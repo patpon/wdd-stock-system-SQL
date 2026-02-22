@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bar Stock Management - ระบบจัดการสต็อกบาร์น้ำ</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal active">
+        <div class="login-scene">
+            <!-- Animated background blobs -->
+            <div class="login-blob login-blob-1"></div>
+            <div class="login-blob login-blob-2"></div>
+            <div class="login-blob login-blob-3"></div>
+
+            <div class="login-card">
+                <!-- Left decorative panel -->
+                <div class="login-card-left">
+                    <div class="login-left-content">
+                        <div class="login-brand-icon">🍺</div>
+                        <h2 class="login-brand-title">Bar Stock</h2>
+                        <p class="login-brand-subtitle">ระบบจัดการสต็อกบาร์น้ำ</p>
+                        <p id="loginRestaurantName" class="login-restaurant-name"></p>
+                    </div>
+                    <div class="login-left-decoration">
+                        <div class="login-circle login-circle-1"></div>
+                        <div class="login-circle login-circle-2"></div>
+                        <div class="login-circle login-circle-3"></div>
+                    </div>
+                </div>
+
+                <!-- Right form panel -->
+                <div class="login-card-right">
+                    <div class="login-form-header">
+                        <h3>ยินดีต้อนรับ 👋</h3>
+                        <p>กรุณาเข้าสู่ระบบเพื่อดำเนินการต่อ</p>
+                    </div>
+                    <form id="loginForm" class="login-form">
+                        <div class="login-input-group">
+                            <label for="username">ชื่อผู้ใช้</label>
+                            <div class="login-input-wrapper">
+                                <span class="login-input-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                                </span>
+                                <input type="text" id="username" class="login-input" placeholder="กรอกชื่อผู้ใช้" required>
+                            </div>
+                        </div>
+                        <div class="login-input-group">
+                            <label for="password">รหัสผ่าน</label>
+                            <div class="login-input-wrapper">
+                                <span class="login-input-icon">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                                </span>
+                                <input type="password" id="password" class="login-input" placeholder="กรอกรหัสผ่าน" required>
+                                <button type="button" class="login-toggle-pw" onclick="togglePasswordVisibility()" tabindex="-1">
+                                    <svg id="eyeIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                                </button>
+                            </div>
+                        </div>
+                        <button type="submit" class="login-submit-btn">
+                            <span>เข้าสู่ระบบ</span>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                        </button>
+                    </form>
+                    <div id="loginError" class="error-message"></div>
+                    <div class="login-footer">
+                        <p> 2025 Bar Stock Management System</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App Container -->
+    <div id="appContainer" class="app-container hidden">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <span class="logo-icon">🍺</span>
+                    <span class="logo-text">Bar Stock</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" data-page="dashboard">
+                    <span class="nav-icon">📊</span>
+                    <span class="nav-text">Dashboard</span>
+                </a>
+                <a href="#" class="nav-item" data-page="daily">
+                    <span class="nav-icon">📝</span>
+                    <span class="nav-text">บันทึกประจำวัน</span>
+                </a>
+                <a href="#" class="nav-item" data-page="receive">
+                    <span class="nav-icon">📦</span>
+                    <span class="nav-text">รับเข้าสินค้า</span>
+                </a>
+                <a href="#" class="nav-item" data-page="countCoffee">
+                    <span class="nav-icon">☕</span>
+                    <span class="nav-text">นับสต็อก กาแฟ</span>
+                </a>
+                <a href="#" class="nav-item" data-page="countA">
+                    <span class="nav-icon">💧</span>
+                    <span class="nav-text">นับสต็อก บาร์น้ำ</span>
+                </a>
+                <a href="#" class="nav-item" data-page="countStore">
+                    <span class="nav-icon">🏪</span>
+                    <span class="nav-text">นับสต็อก สโตว์</span>
+                </a>
+                <a href="#" class="nav-item" data-page="sales">
+                    <span class="nav-icon">💰</span>
+                    <span class="nav-text">ขาย</span>
+                </a>
+                <a href="#" class="nav-item" data-page="withdraw">
+                    <span class="nav-icon">📤</span>
+                    <span class="nav-text">เบิกออก</span>
+                </a>
+                <a href="#" class="nav-item" data-page="reports">
+                    <span class="nav-icon">📈</span>
+                    <span class="nav-text">รายงาน/สรุป</span>
+                </a>
+                <a href="#" class="nav-item admin-only" data-page="products">
+                    <span class="nav-icon">🛒</span>
+                    <span class="nav-text">จัดการสินค้า</span>
+                </a>
+                <a href="#" class="nav-item admin-only" data-page="users">
+                    <span class="nav-icon">👥</span>
+                    <span class="nav-text">จัดการผู้ใช้</span>
+                </a>
+                <a href="#" class="nav-item admin-only" data-page="settings">
+                    <span class="nav-icon">⚙️</span>
+                    <span class="nav-text">ตั้งค่า</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <span class="user-avatar">👤</span>
+                    <span class="user-name" id="currentUserName">Admin</span>
+                    <span class="user-role badge" id="currentUserRole">admin</span>
+                </div>
+                <button class="btn btn-outline btn-sm btn-block" id="toggleThemeBtn" title="สลับธีม">
+                    <span class="icon theme-icon">🌙</span>
+                    <span class="theme-text">โหมดมืด</span>
+                </button>
+                <button class="btn btn-outline btn-sm btn-block" id="collapseSidebarBtn" title="ยุบ/ขยายเมนู">
+                    <span class="icon collapse-icon">◀</span>
+                    <span class="collapse-text">ยุบเมนู</span>
+                </button>
+                <button class="btn btn-outline btn-sm" id="logoutBtn">
+                    <span class="icon">🚪</span> ออกจากระบบ
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="main-header">
+                <div class="header-left">
+                    <button class="menu-toggle" id="menuToggle">☰</button>
+                    <h2 id="pageTitle">Dashboard</h2>
+                </div>
+                <div class="header-right">
+                    <span class="current-date" id="currentDate"></span>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <div class="page-content">
+                <!-- Dashboard Page -->
+                <section id="dashboardPage" class="page active">
+                    <div class="dashboard-grid">
+                        <!-- Stats Cards -->
+                        <div class="stats-row">
+                            <div class="stat-card">
+                                <div class="stat-icon bg-primary">📦</div>
+                                <div class="stat-info">
+                                    <h3 id="totalProducts">0</h3>
+                                    <p>รายการสินค้า</p>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon bg-success">✅</div>
+                                <div class="stat-info">
+                                    <h3 id="inStockCount">0</h3>
+                                    <p>สต็อกปกติ</p>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon bg-warning">⚠️</div>
+                                <div class="stat-info">
+                                    <h3 id="lowStockCount">0</h3>
+                                    <p>ใกล้หมด</p>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon bg-danger">🔴</div>
+                                <div class="stat-info">
+                                    <h3 id="shortageCount">0</h3>
+                                    <p>ขาดสต็อก</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Shortage Alert -->
+                        <div class="card shortage-card">
+                            <div class="card-header">
+                                <h3>🚨 สินค้าขาด/เกิน</h3>
+                                <div class="page-actions" style="display: flex; gap: 8px; align-items: center;">
+                                    <input type="date" id="dashboardDate" class="date-input" style="width: auto;">
+                                    <button class="btn btn-sm btn-primary" id="loadDashboardBtn">
+                                        <span class="icon">🔄</span> โหลด
+                                    </button>
+                                    <button class="btn btn-sm btn-outline" id="sendLineBtn">
+                                        <span class="icon">📱</span> ส่ง LINE
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div id="shortageList" class="shortage-list">
+                                    <p class="text-muted">ยังไม่มีข้อมูล</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Quick Actions -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>⚡ ทางลัด</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="quick-actions">
+                                    <button class="quick-action-btn" data-page="daily">
+                                        <span class="icon">📝</span>
+                                        <span>บันทึกประจำวัน</span>
+                                    </button>
+                                    <button class="quick-action-btn" data-page="receive">
+                                        <span class="icon">📦</span>
+                                        <span>รับเข้าสินค้า</span>
+                                    </button>
+                                    <button class="quick-action-btn" id="exportPdfBtn">
+                                        <span class="icon">📄</span>
+                                        <span>Export PDF</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Daily Stock Page -->
+                <section id="dailyPage" class="page">
+                    <div class="page-header">
+                        <h3>📝 บันทึกสต็อกประจำวัน</h3>
+                        <div class="page-actions">
+                            <input type="date" id="stockDate" class="date-input">
+                            <button class="btn btn-primary" id="loadStockBtn">
+                                <span class="icon">🔄</span> โหลดข้อมูล
+                            </button>
+                            <button class="btn btn-success" id="saveStockBtn">
+                                <span class="icon">💾</span> บันทึก
+                            </button>
+                            <button class="btn btn-outline" id="printDailyStockBtn">
+                                <span class="icon">🖨️</span> พิมพ์
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Print Header (shows only when printing) -->
+                    <div id="printHeader" class="print-header">
+                        <h2 id="printLine1">📝 บันทึกสต็อกประจำวัน วันที่ข้อมูล</h2>
+                        <p id="printLine2"></p>
+                    </div>
+                    <div class="table-wrapper">
+                        <div class="table-container" id="dailyTableContainer">
+                            <table class="data-table" id="dailyStockTable">
+                                <thead>
+                                    <tr>
+                                        <th>รหัส</th>
+                                        <th>ชื่อสินค้า</th>
+                                        <th class="col-cf">ยอดยกมา</th>
+                                        <th colspan="2" class="col-in">รับเข้า</th>
+                                        <th colspan="2" class="col-transfer">กาแฟ</th>
+                                        <th colspan="2" class="col-transfer">บาร์น้ำ</th>
+                                        <th colspan="2" class="col-transfer">สโตร์</th>
+                                        <th class="col-withdraw">เบิกออก</th>
+                                        <th colspan="2" class="col-sold">ยอดขาย<br><small>(Ocha)</small></th>
+                                        <th class="col-sold">รวม<br>Ocha</th>
+                                        <th class="col-evening" style="display:none">รวมเย็น</th>
+                                        <th class="col-diff" style="display:none">เช้า-เย็น</th>
+                                        <th>ขาด/เกิน</th>
+                                        <th class="col-actual">ยอดยกไป</th>
+                                    </tr>
+                                    <tr class="sub-header">
+                                        <th></th>
+                                        <th></th>
+                                        <th class="col-cf">ขวด</th>
+                                        <th class="col-in">ลัง</th>
+                                        <th class="col-in">ขวด</th>
+                                        <th class="col-transfer">ลัง</th>
+                                        <th class="col-transfer">ขวด</th>
+                                        <th class="col-transfer">ลัง</th>
+                                        <th class="col-transfer">ขวด</th>
+                                        <th class="col-transfer">ลัง</th>
+                                        <th class="col-transfer">ขวด</th>
+                                        <th class="col-withdraw">ขวด</th>
+                                        <th class="col-sold">กาแฟ</th>
+                                        <th class="col-sold">บาร์น้ำ</th>
+                                        <th class="col-sold">ขวด</th>
+                                        <th class="col-evening" style="display:none">ขวด</th>
+                                        <th class="col-diff" style="display:none">ขวด</th>
+                                        <th>ขวด</th>
+                                        <th class="col-actual">ขวด</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="dailyStockBody">
+                                    <!-- Dynamic content -->
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- Sticky Scrollbar -->
+                        <div class="sticky-scrollbar" id="dailyStickyScrollbar">
+                            <div class="sticky-scrollbar-inner" id="dailyStickyScrollbarInner"></div>
+                        </div>
+                    </div>
+                    <!-- Print Footer (shows only when printing) -->
+                    <div id="printFooter" class="print-footer">
+                        <p>ลงชื่อ _______________________ ผู้บันทึก</p>
+                    </div>
+                </section>
+
+                <!-- Receive Product Page -->
+                <section id="receivePage" class="page">
+                    <div class="page-header">
+                        <h3>📦 รับเข้าสินค้า</h3>
+                        <div class="page-actions">
+                            <input type="date" id="receiveDate" class="date-input">
+                            <button class="btn btn-primary" id="loadReceiveBtn">
+                                <span class="icon">🔄</span> โหลด
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>➕ เพิ่มรายการรับเข้า</h3>
+                        </div>
+                        <div class="card-body">
+                            <form id="receiveForm" class="form-grid">
+                                <input type="hidden" id="receiveEditIndex" value="">
+                                <div class="form-group">
+                                    <label>สินค้า</label>
+                                    <select id="receiveProduct" class="form-control" required>
+                                        <option value="">เลือกสินค้า</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>จำนวน (ลัง)</label>
+                                    <input type="number" id="receivePack" class="form-control" min="0" value="0">
+                                </div>
+                                <div class="form-group">
+                                    <label>จำนวน (ขวด)</label>
+                                    <input type="number" id="receiveBottle" class="form-control" min="0" value="0">
+                                </div>
+                                <div class="form-group">
+                                    <label>หมายเหตุ</label>
+                                    <input type="text" id="receiveNote" class="form-control"
+                                        placeholder="หมายเหตุ (ถ้ามี)">
+                                </div>
+                                <div class="form-group full-width" style="display: flex; gap: 10px;">
+                                    <button type="submit" class="btn btn-success" id="receiveSubmitBtn">
+                                        <span class="icon">✅</span> บันทึก
+                                    </button>
+                                    <button type="button" class="btn btn-outline" id="receiveCancelBtn"
+                                        style="display: none;">
+                                        ยกเลิก
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Recent Receives -->
+                    <div class="card mt-3">
+                        <div class="card-header">
+                            <h3>📋 รายการรับเข้า</h3>
+                        </div>
+                        <div class="card-body">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>วันที่</th>
+                                        <th>สินค้า</th>
+                                        <th>ลัง</th>
+                                        <th>ขวด</th>
+                                        <th>หมายเหตุ</th>
+                                        <th>จัดการ</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recentReceives">
+                                    <!-- Dynamic content -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Count Coffee Page -->
+                <section id="countCoffeePage" class="page">
+                    <div class="page-header">
+                        <h3>☕ นับสต็อก กาแฟ</h3>
+                        <div class="page-actions">
+                            <input type="date" id="countCoffeeDate" class="date-input">
+                            <button class="btn btn-primary" id="loadCountCoffeeBtn">
+                                <span class="icon">🔄</span> โหลด
+                            </button>
+                            <button class="btn btn-success" id="saveCountCoffeeBtn">
+                                <span class="icon">💾</span> บันทึก
+                            </button>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table" id="countCoffeeTable">
+                            <thead>
+                                <tr>
+                                    <th>รหัส</th>
+                                    <th>ชื่อสินค้า</th>
+                                    <th colspan="2">ส่งกาแฟ</th>
+                                </tr>
+                                <tr class="sub-header">
+                                    <th></th>
+                                    <th></th>
+                                    <th>ลัง</th>
+                                    <th>ขวด</th>
+                                </tr>
+                            </thead>
+                            <tbody id="countCoffeeBody">
+                                <!-- Dynamic content -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Count A Page -->
+                <section id="countAPage" class="page">
+                    <div class="page-header">
+                        <h3>💧 นับสต็อก บาร์น้ำ</h3>
+                        <div class="page-actions">
+                            <input type="date" id="countADate" class="date-input">
+                            <button class="btn btn-primary" id="loadCountABtn">
+                                <span class="icon">🔄</span> โหลด
+                            </button>
+                            <button class="btn btn-success" id="saveCountABtn">
+                                <span class="icon">💾</span> บันทึก
+                            </button>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table" id="countATable">
+                            <thead>
+                                <tr>
+                                    <th>รหัส</th>
+                                    <th>ชื่อสินค้า</th>
+                                    <th colspan="2">ส่งบาร์น้ำ</th>
+                                </tr>
+                                <tr class="sub-header">
+                                    <th></th>
+                                    <th></th>
+                                    <th>ลัง</th>
+                                    <th>ขวด</th>
+                                </tr>
+                            </thead>
+                            <tbody id="countABody">
+                                <!-- Dynamic content -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Count Store Page -->
+                <section id="countStorePage" class="page">
+                    <div class="page-header">
+                        <h3>🏪 นับสต็อก สโตว์</h3>
+                        <div class="page-actions">
+                            <input type="date" id="countStoreDate" class="date-input">
+                            <button class="btn btn-primary" id="loadCountStoreBtn">
+                                <span class="icon">🔄</span> โหลด
+                            </button>
+                            <button class="btn btn-success" id="saveCountStoreBtn">
+                                <span class="icon">💾</span> บันทึก
+                            </button>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table" id="countStoreTable">
+                            <thead>
+                                <tr>
+                                    <th>รหัส</th>
+                                    <th>ชื่อสินค้า</th>
+                                    <th colspan="2">ส่งสโตร์</th>
+                                </tr>
+                                <tr class="sub-header">
+                                    <th></th>
+                                    <th></th>
+                                    <th>ลัง</th>
+                                    <th>ขวด</th>
+                                </tr>
+                            </thead>
+                            <tbody id="countStoreBody">
+                                <!-- Dynamic content -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Sales Page -->
+                <section id="salesPage" class="page">
+                    <div class="page-header">
+                        <h3>💰 ขาย</h3>
+                        <div class="page-actions">
+                            <input type="date" id="salesDate" class="date-input">
+                            <button class="btn btn-primary" id="loadSalesBtn">
+                                <span class="icon">🔄</span> โหลด
+                            </button>
+                            <button class="btn btn-success" id="saveSalesBtn">
+                                <span class="icon">💾</span> บันทึก
+                            </button>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table" id="salesTable">
+                            <thead>
+                                <tr>
+                                    <th>รหัส</th>
+                                    <th>ชื่อสินค้า</th>
+                                    <th>ขาย (ขวด)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="salesBody">
+                                <!-- Dynamic content -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Withdraw Page -->
+                <section id="withdrawPage" class="page">
+                    <div class="page-header">
+                        <h3>📤 เบิกออก</h3>
+                        <div class="page-actions">
+                            <input type="date" id="withdrawDate" class="date-input">
+                            <button class="btn btn-primary" id="loadWithdrawBtn">
+                                <span class="icon">🔄</span> โหลด
+                            </button>
+                            <button class="btn btn-success" id="saveWithdrawBtn">
+                                <span class="icon">💾</span> บันทึก
+                            </button>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table" id="withdrawTable">
+                            <thead>
+                                <tr>
+                                    <th>รหัส</th>
+                                    <th>ชื่อสินค้า</th>
+                                    <th>เบิกออก (ขวด)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="withdrawBody">
+                                <!-- Dynamic content -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Reports Page -->
+                <section id="reportsPage" class="page">
+                    <div class="page-header">
+                        <h3>📈 รายงานและสรุป</h3>
+                        <div class="page-actions">
+                            <select id="reportMonth" class="form-control">
+                                <option value="1">มกราคม</option>
+                                <option value="2">กุมภาพันธ์</option>
+                                <option value="3">มีนาคม</option>
+                                <option value="4">เมษายน</option>
+                                <option value="5">พฤษภาคม</option>
+                                <option value="6">มิถุนายน</option>
+                                <option value="7">กรกฎาคม</option>
+                                <option value="8">สิงหาคม</option>
+                                <option value="9">กันยายน</option>
+                                <option value="10">ตุลาคม</option>
+                                <option value="11">พฤศจิกายน</option>
+                                <option value="12">ธันวาคม</option>
+                            </select>
+                            <input type="number" id="reportYear" class="form-control" min="2020" max="2030"
+                                value="2026">
+                            <button class="btn btn-primary" id="loadReportBtn">
+                                <span class="icon">📊</span> โหลดรายงาน
+                            </button>
+                            <button class="btn btn-success" id="exportReportBtn">
+                                <span class="icon">📄</span> Export PDF
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="table-container summary-table">
+                                <table class="data-table" id="summaryTable">
+                                    <thead id="summaryHeader">
+                                        <!-- Dynamic header -->
+                                    </thead>
+                                    <tbody id="summaryBody">
+                                        <!-- Dynamic content -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Products Page (Admin) -->
+                <section id="productsPage" class="page">
+                    <div class="page-header">
+                        <h3>🛒 จัดการสินค้า</h3>
+                        <button class="btn btn-primary" id="addProductBtn">
+                            <span class="icon">➕</span> เพิ่มสินค้า
+                        </button>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table" id="productsTable">
+                            <thead>
+                                <tr>
+                                    <th>รหัส</th>
+                                    <th>ชื่อสินค้า</th>
+                                    <th>จน/หน่วยบรรจุ</th>
+                                    <th>หน่วยบรรจุ</th>
+                                    <th>หน่วยขาย</th>
+                                    <th>จำนวนขั้นต่ำ</th>
+                                    <th>กลุ่ม</th>
+                                    <th>สถานะ</th>
+                                    <th>จัดการ</th>
+                                </tr>
+                            </thead>
+                            <tbody id="productsBody">
+                                <!-- Dynamic content -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- Users Page (Admin) -->
+                <section id="usersPage" class="page">
+                    <div class="page-header">
+                        <h3>👥 จัดการผู้ใช้</h3>
+                        <button class="btn btn-primary" id="addUserBtn">
+                            <span class="icon">➕</span> เพิ่มผู้ใช้
+                        </button>
+                    </div>
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="table-container">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>ชื่อผู้ใช้</th>
+                                            <th>ชื่อ-นามสกุล</th>
+                                            <th>บทบาท</th>
+                                            <th>สิทธิ์เข้าถึงหน้า</th>
+                                            <th>จัดการ</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="usersBody">
+                                        <!-- Dynamic content -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Settings Page (Admin) -->
+                <section id="settingsPage" class="page">
+                    <div class="page-header">
+                        <h3>⚙️ ตั้งค่าระบบ</h3>
+                    </div>
+                    <div class="settings-grid">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>🔗 Google Sheets API</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label>Google Apps Script URL</label>
+                                    <input type="url" id="gasUrl" class="form-control"
+                                        placeholder="https://script.google.com/macros/s/xxxxx/exec">
+                                </div>
+                                <button class="btn btn-primary" id="saveGasUrl">
+                                    <span class="icon">💾</span> บันทึก
+                                </button>
+                                <button class="btn btn-outline" id="testConnection">
+                                    <span class="icon">🔌</span> ทดสอบการเชื่อมต่อ
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>📱 LINE Messaging API</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label>Channel Access Token</label>
+                                    <input type="text" id="lineChannelToken" class="form-control"
+                                        placeholder="ใส่ Channel Access Token จาก LINE Developers">
+                                </div>
+                                <div class="form-group">
+                                    <label>Group ID / User ID</label>
+                                    <input type="text" id="lineTargetId" class="form-control"
+                                        placeholder="ใส่ Group ID หรือ User ID ที่ต้องการส่ง">
+                                </div>
+                                <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">
+                                    📌 ดูวิธีตั้งค่าได้ที่ <a href="https://developers.line.biz/console/"
+                                        target="_blank" style="color: var(--primary);">LINE Developers Console</a>
+                                </p>
+                                <button class="btn btn-primary" id="saveLineToken">
+                                    <span class="icon">💾</span> บันทึก
+                                </button>
+                                <button class="btn btn-outline" id="testLineNotify">
+                                    <span class="icon">📤</span> ทดสอบส่ง
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>🏪 ข้อมูลร้าน</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label>ชื่อร้าน</label>
+                                    <input type="text" id="restaurantName" class="form-control"
+                                        placeholder="ชื่อร้านอาหาร">
+                                </div>
+                                <button class="btn btn-primary" id="saveRestaurantInfo">
+                                    <span class="icon">💾</span> บันทึก
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>📅 วันหยุด</h3>
+                            </div>
+                            <div class="card-body">
+                                <p style="color: var(--text-muted); margin-bottom: 12px;">
+                                    ตั้งค่าวันหยุดของร้าน ระบบจะข้ามวันหยุดเมื่อดึงยอดยกมา
+                                </p>
+                                <div class="form-group" style="display: flex; gap: 10px; flex-wrap: wrap;">
+                                    <input type="date" id="holidayDate" class="form-control" style="width: auto;">
+                                    <input type="text" id="holidayDesc" class="form-control"
+                                        placeholder="ชื่อวันหยุด (เช่น ปีใหม่)" style="flex: 1; min-width: 150px;">
+                                    <button class="btn btn-primary" id="addHolidayBtn">
+                                        <span class="icon">➕</span> เพิ่ม
+                                    </button>
+                                </div>
+                                <div class="table-container" style="margin-top: 12px;">
+                                    <table class="data-table">
+                                        <thead>
+                                            <tr>
+                                                <th>วันที่</th>
+                                                <th>ชื่อวันหยุด</th>
+                                                <th>จัดการ</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="holidaysBody">
+                                            <!-- Dynamic content -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Product Modal -->
+    <div id="productModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="productModalTitle">เพิ่มสินค้า</h3>
+                <button class="modal-close" id="closeProductModal">&times;</button>
+            </div>
+            <form id="productForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>รหัสสินค้า</label>
+                        <input type="number" id="productCode" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>ชื่อสินค้า</label>
+                        <input type="text" id="productName" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>จำนวนต่อหน่วยบรรจุ</label>
+                        <input type="number" id="qtyPerPack" class="form-control" value="12" required>
+                    </div>
+                    <div class="form-group">
+                        <label>ชื่อหน่วยบรรจุ</label>
+                        <select id="packUnit" class="form-control">
+                            <option value="ลัง">ลัง</option>
+                            <option value="แพ็ค">แพ็ค</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>หน่วยขาย</label>
+                        <input type="text" id="sellUnit" class="form-control" value="ขวด">
+                    </div>
+                    <div class="form-group">
+                        <label>จำนวนขั้นต่ำ</label>
+                        <input type="number" id="minQty" class="form-control" value="60">
+                    </div>
+                    <div class="form-group full-width">
+                        <label>กลุ่มสินค้า</label>
+                        <input type="text" id="category" class="form-control" value="บาร์น้ำ">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" id="cancelProductBtn">ยกเลิก</button>
+                    <button type="submit" class="btn btn-primary">บันทึก</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- User Modal -->
+    <div id="userModal" class="modal">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">
+                <h3 id="userModalTitle">เพิ่มผู้ใช้</h3>
+                <button class="modal-close" id="closeUserModal">&times;</button>
+            </div>
+            <form id="userForm">
+                <input type="hidden" id="editUserId" value="">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>ชื่อผู้ใช้</label>
+                        <input type="text" id="newUsername" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>รหัสผ่าน</label>
+                        <input type="password" id="newPassword" class="form-control"
+                            placeholder="ระบุเฉพาะเมื่อต้องการเปลี่ยน">
+                    </div>
+                    <div class="form-group">
+                        <label>ชื่อ-นามสกุล</label>
+                        <input type="text" id="newName" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>บทบาท</label>
+                        <select id="newRole" class="form-control">
+                            <option value="user">User</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group" style="margin-top: 16px;">
+                    <label style="margin-bottom: 12px; display: block;">🔐 สิทธิ์เข้าถึงหน้า (สำหรับ User)</label>
+                    <div class="permissions-grid"
+                        style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px;">
+                        <label class="permission-item"
+                            style="display: flex; align-items: center; gap: 8px; padding: 8px; background: var(--bg-input); border-radius: 6px; cursor: pointer;">
+                            <input type="checkbox" id="perm_dashboard" value="dashboard" checked> 📊 Dashboard
+                        </label>
+                        <label class="permission-item"
+                            style="display: flex; align-items: center; gap: 8px; padding: 8px; background: var(--bg-input); border-radius: 6px; cursor: pointer;">
+                            <input type="checkbox" id="perm_daily" value="daily" checked> 📝 บันทึกประจำวัน
+                        </label>
+                        <label class="permission-item"
+                            style="display: flex; align-items: center; gap: 8px; padding: 8px; background: var(--bg-input); border-radius: 6px; cursor: pointer;">
+                            <input type="checkbox" id="perm_receive" value="receive" checked> 📦 รับเข้าสินค้า
+                        </label>
+                        <label class="permission-item"
+                            style="display: flex; align-items: center; gap: 8px; padding: 8px; background: var(--bg-input); border-radius: 6px; cursor: pointer;">
+                            <input type="checkbox" id="perm_countCoffee" value="countCoffee" checked> ☕ นับสต็อก กาแฟ
+                        </label>
+                        <label class="permission-item"
+                            style="display: flex; align-items: center; gap: 8px; padding: 8px; background: var(--bg-input); border-radius: 6px; cursor: pointer;">
+                            <input type="checkbox" id="perm_countA" value="countA" checked> 💧 นับสต็อก บาร์น้ำ
+                        </label>
+                        <label class="permission-item"
+                            style="display: flex; align-items: center; gap: 8px; padding: 8px; background: var(--bg-input); border-radius: 6px; cursor: pointer;">
+                            <input type="checkbox" id="perm_countStore" value="countStore" checked> 🏪 นับสต็อก สโตว์
+                        </label>
+                        <label class="permission-item"
+                            style="display: flex; align-items: center; gap: 8px; padding: 8px; background: var(--bg-input); border-radius: 6px; cursor: pointer;">
+                            <input type="checkbox" id="perm_sales" value="sales" checked> 💰 ขาย
+                        </label>
+                        <label class="permission-item"
+                            style="display: flex; align-items: center; gap: 8px; padding: 8px; background: var(--bg-input); border-radius: 6px; cursor: pointer;">
+                            <input type="checkbox" id="perm_withdraw" value="withdraw" checked> 📤 เบิกออก
+                        </label>
+                        <label class="permission-item"
+                            style="display: flex; align-items: center; gap: 8px; padding: 8px; background: var(--bg-input); border-radius: 6px; cursor: pointer;">
+                            <input type="checkbox" id="perm_reports" value="reports" checked> 📈 รายงาน/สรุป
+                        </label>
+                    </div>
+                    <small style="color: var(--text-muted); margin-top: 8px; display: block;">* Admin
+                        มีสิทธิ์เข้าถึงทุกหน้าโดยอัตโนมัติ</small>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline" id="cancelUserBtn">ยกเลิก</button>
+                    <button type="submit" class="btn btn-primary">บันทึก</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">
+        <span class="toast-icon"></span>
+        <span class="toast-message"></span>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay hidden">
+        <div class="spinner"></div>
+        <p>กำลังโหลด...</p>
+    </div>
+
+    <script>
+        function togglePasswordVisibility() {
+            const pw = document.getElementById('password');
+            const icon = document.getElementById('eyeIcon');
+            if (pw.type === 'password') {
+                pw.type = 'text';
+                icon.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>';
+            } else {
+                pw.type = 'password';
+                icon.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+            }
+        }
+    </script>
+    <script src="js/config.js"></script>
+    <script src="js/sheets-api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/stock.js"></script>
+    <script src="js/count-pages.js"></script>
+    <script src="js/app.js"></script>
+</body>
+
+</html>
