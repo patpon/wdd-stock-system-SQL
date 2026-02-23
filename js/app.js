@@ -507,37 +507,37 @@ async function loadDailyStock() {
                     <input type="number" class="cf-bottle" value="${cfBottles}" min="0">
                 </td>
                 <td class="td-in">
-                    <input type="number" class="in-pack" value="${incomingPack || ''}" placeholder="0" min="0">
+                    <input type="number" class="in-pack" value="${incomingPack || ''}" min="0">
                 </td>
                 <td class="td-in">
-                    <input type="number" class="in-bottle" value="${incomingBottle || ''}" placeholder="0" min="0">
+                    <input type="number" class="in-bottle" value="${incomingBottle || ''}" min="0">
                 </td>
                 <td class="td-transfer">
-                    <input type="number" class="transfer-coffee-pack" value="${(existing?.transferCoffeePack || '')}" placeholder="0" min="0">
+                    <input type="number" class="transfer-coffee-pack" value="${(existing?.transferCoffeePack || '')}" min="0">
                 </td>
                 <td class="td-transfer">
-                    <input type="number" class="transfer-coffee" value="${(existing?.transferCoffee || '')}" placeholder="0" min="0">
+                    <input type="number" class="transfer-coffee" value="${(existing?.transferCoffee || '')}" min="0">
                 </td>
                 <td class="td-transfer">
-                    <input type="number" class="transfer-a-pack" value="${(existing?.transferAPack || '')}" placeholder="0" min="0">
+                    <input type="number" class="transfer-a-pack" value="${(existing?.transferAPack || '')}" min="0">
                 </td>
                 <td class="td-transfer">
-                    <input type="number" class="transfer-a" value="${(existing?.transferA || '')}" placeholder="0" min="0">
+                    <input type="number" class="transfer-a" value="${(existing?.transferA || '')}" min="0">
                 </td>
                 <td class="td-transfer">
-                    <input type="number" class="transfer-store-pack" value="${(existing?.transferStorePack || '')}" placeholder="0" min="0">
+                    <input type="number" class="transfer-store-pack" value="${(existing?.transferStorePack || '')}" min="0">
                 </td>
                 <td class="td-transfer">
-                    <input type="number" class="transfer-store" value="${(existing?.transferStore || '')}" placeholder="0" min="0">
+                    <input type="number" class="transfer-store" value="${(existing?.transferStore || '')}" min="0">
                 </td>
                 <td class="td-withdraw">
-                    <input type="number" class="withdraw" value="${(existing?.withdraw || '')}" placeholder="0" min="0">
+                    <input type="number" class="withdraw" value="${(existing?.withdraw || '')}" min="0">
                 </td>
                 <td class="td-sold">
-                    <input type="number" class="ocha-coffee" value="${(existing?.ochaCoffee || '')}" placeholder="0" min="0">
+                    <input type="number" class="ocha-coffee" value="${(existing?.ochaCoffee || '')}" min="0">
                 </td>
                 <td class="td-sold">
-                    <input type="number" class="ocha-bar" value="${(existing?.ochaBar || '')}" placeholder="0" min="0">
+                    <input type="number" class="ocha-bar" value="${(existing?.ochaBar || '')}" min="0">
                 </td>
                 <td class="td-sold sold-total-cell" data-sold-total="0">
                     0
